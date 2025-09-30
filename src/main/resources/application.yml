@@ -1,0 +1,34 @@
+#server:
+#  port: 8080
+# ## IF a DB is needed: config file and uncommented in POM.XML
+#spring:
+#  properties:
+#    hibernate:
+#      globally_quoted_identifiers: true
+#  datasource:
+#    driverClassName: org.postgresql.Driver
+#    url: jdbc:postgresql://localhost:5432/spring-blue-print
+#    password: admin
+#    username: admin
+#    #    testOnBorrow: true
+#    #    testWhileIdle: true
+#    schema: address-book
+#  #    hikari:
+#  #      maximum-pool-size: 5
+#  #      idle-timeout: 600000
+#  flyway:
+#    defaultSchema: blue-print
+#    baseline-on-migrate: true
+#    enabled: true
+#  jpa:
+#    database-platform: org.hibernate.dialect.PostgreSQLDialect
+#    # Hibernate ddl auto (create, create-drop, update): with "update" the database
+#    # schema will be automatically updated accordingly to java entities found in
+#    # the project
+#    hibernate:
+#      ddl-auto: update
+#    #    show-sql: false
+#    properties:
+#      hibernate:
+#        #        format_sql: false
+#        default_schema: blue-print
