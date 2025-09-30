@@ -16,9 +16,9 @@ import java.util.concurrent.TimeUnit;
 @Service
 public class ElevatorServiceImpl {
 
-    private int currentFloor = 0;
+    private int currentFloor;
 
-    int floorTravelTimeMs = 2500;
+    int floorTravelTimeMs = 500; // should be configurable
     private final ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
     private Direction direction = Direction.STATIONARY;
     private final TreeSet<Integer> upRequests = new TreeSet<>();
@@ -29,7 +29,8 @@ public class ElevatorServiceImpl {
         executor.scheduleAtFixedRate(this::scan, 0, 1000, TimeUnit.MILLISECONDS);
     }
 
-    public synchronized void setDirection(String inputDirection, int floor) {
+    public synchronized void setDirection(String inputDirection, int floor) { // name ot be change
+        //todo inputDirection should be an enum
         if (Direction.UP.toString().equals(inputDirection)) {
             direction = Direction.UP;
             upRequests.add(floor);
@@ -64,37 +65,26 @@ public class ElevatorServiceImpl {
 
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
-            System.err.println("Elevator thread was interrupted.");
+            System.err.println("Elevator thread was interrupted."); //todo changing the logging
         }
     }
 
     private void travelTo(int destinationFloor) throws InterruptedException {
-        System.out.println("Elevator at floor " + currentFloor + ", moving to " + destinationFloor);
+        System.out.println("Elevator at floor " + currentFloor + ", moving to " + destinationFloor); //todo changing the logging
         int floorsToTravel = Math.abs(destinationFloor - currentFloor);
         for (int i = 0; i < floorsToTravel; i++) {
-            Thread.sleep(floorTravelTimeMs); // Simulate travel time
+            Thread.sleep(floorTravelTimeMs); // need top be set up externally
             if (currentFloor < destinationFloor) {
                 currentFloor++;
             } else {
                 currentFloor--;
             }
-            System.out.println("...now at floor " + currentFloor);
+            System.out.println("...now at floor " + currentFloor); //todo changing the logging
         }
-        System.out.println("Elevator arrived at floor " + currentFloor + ". Doors opening.");
+        System.out.println("Elevator arrived at floor " + currentFloor + ". Doors opening."); //todo changing the logging
     }
 
-//    @Override
-//    public void run() {
-//        try {
-//            while (true) {
-//                scan();
-//            }
-//        } catch (Exception e) { //InterruptedException
-//            Thread.currentThread().interrupt();
-//        }
-//    }
-
-    public enum Direction {
+    public enum Direction { // using another class ?
         UP, DOWN, STATIONARY
     }
 
