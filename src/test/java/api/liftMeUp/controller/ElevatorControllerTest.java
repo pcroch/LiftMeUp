@@ -24,11 +24,11 @@ class ElevatorControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
-//    @Order(1)
-//    @Test
-//    @DisplayName(" get a simple ping in the controller")
-//    void getCall() throws Exception {
-//        mockMvc.perform(post("/v1/elevator/call?direction=up&requesterFloor=20"))
-//                .andExpect(status().isAccepted());
-//    }
+    @Order(1)
+    @Test
+    @DisplayName(" get a simple ping in the controller")
+    void getCall() throws Exception {
+        mockMvc.perform(post("/v1/elevator/call?direction=up&requesterFloor=20"))
+                .andExpect(status().isAccepted());
+    }
 }
