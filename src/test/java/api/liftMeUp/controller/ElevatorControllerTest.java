@@ -18,7 +18,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @DisplayName("Integration Testing on Ping Endpoint")
-class PingControllerTest {
+class ElevatorControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -27,7 +27,7 @@ class PingControllerTest {
     @Test
     @DisplayName(" get a simple ping in the controller")
     void getPing() throws Exception {
-        mockMvc.perform(get("/pingController/ping"))
+        mockMvc.perform(get("/v1/elevator/call"))
                 .andExpect(status().isAccepted());
     }
 }
