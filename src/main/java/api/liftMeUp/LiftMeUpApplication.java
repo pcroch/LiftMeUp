@@ -1,13 +1,13 @@
-package api.springblueprint;
+package api.liftMeUp;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class SpringBluePrintApplication {
+public class LiftMeUpApplication  {
 
     public static void main(String[] args) {
-        SpringApplication.run(SpringBluePrintApplication.class, args);
+        SpringApplication.run(LiftMeUpApplication.class, args);
     }
 
 }

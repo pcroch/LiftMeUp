@@ -1,10 +1,10 @@
-package api.springblueprint;
+package api.liftMeUp;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class SpringBluePrintApplicationTests {
+class LiftMeUpApplicationTests {
 
     @Test
     void contextLoads() {

@@ -1,6 +1,6 @@
-package api.springblueprint.controller;
+package api.liftMeUp.controller;
 
-import api.springblueprint.service.PingService;
+import api.liftMeUp.service.PingService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;

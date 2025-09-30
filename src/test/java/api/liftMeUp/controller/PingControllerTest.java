@@ -1,4 +1,4 @@
-package api.springblueprint.controller;
+package api.liftMeUp.controller;
 
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.*;
