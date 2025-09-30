@@ -28,7 +28,7 @@ class ElevatorControllerTest {
 //    @Test
 //    @DisplayName(" get a simple ping in the controller")
 //    void getCall() throws Exception {
-//        mockMvc.perform(post("/v1/elevator/call?direction=left&requesterFloor=20"))
+//        mockMvc.perform(post("/v1/elevator/call?direction=up&requesterFloor=20"))
 //                .andExpect(status().isAccepted());
 //    }
 }

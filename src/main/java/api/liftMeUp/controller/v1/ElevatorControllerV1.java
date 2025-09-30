@@ -22,14 +22,14 @@ public class ElevatorControllerV1 extends BaseRestController {
 
     @RequestMapping("/call")
     @PostMapping(value = "/url", produces = "application/json")
-    public ResponseEntity<String> setDirection(@RequestParam @NonNull String direction, @RequestParam @NonNull Integer requesterFloor) {
+    public ResponseEntity<String> setDirection(@RequestParam @NonNull String direction, @RequestParam @NonNull Integer requesterFloor)  {
         elevatorService.setDirection(direction, requesterFloor);
         return ResponseEntity.status(HttpStatus.ACCEPTED).build();
     }
 
     @RequestMapping("/setFloor")
     @PostMapping(value = "/url", produces = "application/json")
-    public ResponseEntity<String> setFloor(@RequestParam @NonNull Integer floor) {
+    public ResponseEntity<String> setFloor(@RequestParam @NonNull Integer floor)  {
         elevatorService.setFloor(floor);
         return ResponseEntity.status(HttpStatus.ACCEPTED).build();
     }

@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public abstract class BaseRestController {
 
-    public abstract ResponseEntity<String> setDirection(@RequestParam @NonNull String direction, @RequestParam @NonNull Integer requesterFloor);
+    public abstract ResponseEntity<String> setDirection(@RequestParam @NonNull String direction, @RequestParam @NonNull Integer requesterFloor) ;
 
 
-    public abstract ResponseEntity<String> setFloor(@RequestParam @NonNull Integer floor);
+    public abstract ResponseEntity<String> setFloor(@RequestParam @NonNull Integer floor) ;
 }

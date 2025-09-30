@@ -17,7 +17,7 @@ public class ElevatorServiceImpl implements ElevatorService {
 
     ArrayList<Integer> requestArray = new ArrayList<>(Arrays.asList(1, 25, 34, 49));
 
-    public void setDirection(String direction, int floor) {
+    public void setDirection(String direction, int floor)  {
         if ("stationary".equals(currentDirection)) { // bcse we dont want to change the direction as soon as it as started to move
             currentDirection = direction;
         }
@@ -29,7 +29,7 @@ public class ElevatorServiceImpl implements ElevatorService {
     // can be called only if lift is static after it is too late
     // needed for the lift to know where to go to it will assign a floor value to the lift array
 
-    public void setFloor(int floor) {
+    public void setFloor(int floor)  {
 
         // remove the current floor from the list
 
