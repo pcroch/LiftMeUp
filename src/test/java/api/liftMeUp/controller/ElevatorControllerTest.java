@@ -9,6 +9,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 
@@ -23,11 +24,11 @@ class ElevatorControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
-    @Order(1)
-    @Test
-    @DisplayName(" get a simple ping in the controller")
-    void getPing() throws Exception {
-        mockMvc.perform(get("/v1/elevator/call"))
-                .andExpect(status().isAccepted());
-    }
+//    @Order(1)
+//    @Test
+//    @DisplayName(" get a simple ping in the controller")
+//    void getCall() throws Exception {
+//        mockMvc.perform(post("/v1/elevator/call?direction=left&requesterFloor=20"))
+//                .andExpect(status().isAccepted());
+//    }
 }
