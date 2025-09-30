@@ -1,12 +1,23 @@
-# Read Me First
+### Spring Boot
 
-Dummy Endpoint: http://localhost:8080/ping/pingHere
+## Build the app
 
-Should respond:
+    mvn clean install
 
-  pingController Ping
+## Run the app
+
+    mvn spring-boot:run
 
 
+## Dummy Endpoint: 
 
-curl http://localhost:8080/pingController/ping
+    http://localhost:8080/ping/pingHere
+
+# Should respond:
+
+    pingController Ping
+
+# Command
+
+    curl http://localhost:8080/pingController/ping
 
