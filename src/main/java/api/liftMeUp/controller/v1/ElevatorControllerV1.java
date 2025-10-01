@@ -28,7 +28,6 @@ public class ElevatorControllerV1 extends BaseElevatorController {
         this.elevatorService = elevatorService;
     }
 
-//    @PreAuthorize("permitAll()")
     @RequestMapping("/call")
     @PostMapping
     public ResponseEntity getElevator(@RequestParam @NonNull Direction direction, @RequestParam @NonNull  @Min(value=0) @Max(value=50) Integer floor) {
