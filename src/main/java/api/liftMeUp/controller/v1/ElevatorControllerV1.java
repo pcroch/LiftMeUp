@@ -13,6 +13,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+
 @Slf4j
 @RestController
 @RequestMapping("/api/v1/elevator")
@@ -28,7 +31,7 @@ public class ElevatorControllerV1 extends BaseElevatorController {
 //    @PreAuthorize("permitAll()")
     @RequestMapping("/call")
     @PostMapping
-    public ResponseEntity getElevator(@RequestParam @NonNull Direction direction, @RequestParam @NonNull Integer floor) {
+    public ResponseEntity getElevator(@RequestParam @NonNull Direction direction, @RequestParam @NonNull  @Min(value=0) @Max(value=50) Integer floor) {
         elevatorService.setDirection(direction, floor);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
@@ -36,7 +39,7 @@ public class ElevatorControllerV1 extends BaseElevatorController {
     @isFireman
     @RequestMapping("/priority")
     @PostMapping
-    public ResponseEntity getPriority(@RequestParam @NonNull Direction direction, @RequestParam @NonNull Integer floor) {  // using overloading? dupliacte method?
+    public ResponseEntity getPriority(@RequestParam @NonNull Direction direction, @RequestParam @NonNull  @Min(value=0) @Max(value=50) Integer floor) {
         elevatorService.setPriority(direction, floor);
         return ResponseEntity.status(HttpStatus.OK).build();
     }

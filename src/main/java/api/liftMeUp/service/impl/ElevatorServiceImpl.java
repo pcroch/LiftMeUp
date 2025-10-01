@@ -1,6 +1,7 @@
 package api.liftMeUp.service.impl;
 
 import api.liftMeUp.commun.constants.Direction;
+import api.liftMeUp.errors.BadRequestException;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
@@ -28,7 +29,7 @@ public class ElevatorServiceImpl {
     } // ScheduledExecutorService is better?
 
     public synchronized void setDirection(Direction inputDirection, int floor) {
-        //todo inputDirection should be an enum
+
         if (Direction.UP.equals(inputDirection)) {
             direction = Direction.UP;
             upRequests.add(floor);
@@ -40,7 +41,7 @@ public class ElevatorServiceImpl {
     }
 
     public synchronized void setPriority(Direction inputDirection, int floor) {
-        //todo inputDirection should be an enum
+
         if (Direction.UP.equals(inputDirection)) {
             direction = Direction.UP;
             upPriorityRequests.add(floor);
