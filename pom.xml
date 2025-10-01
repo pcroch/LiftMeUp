@@ -9,7 +9,7 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.example</groupId>
-    <artifactId>LiftMeUp</artifactId>
+    <artifactId>lift-me-up</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>spring-blue-print</name>
     <description>spring-blue-print</description>
