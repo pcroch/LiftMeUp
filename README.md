@@ -18,14 +18,14 @@
 
 # Command for a non-authenticated user
 
-    curl -X POST http://localhost:8080/api/v1/elevator/call?direction=UP&requesterFloor=50
+    curl -X POST http://localhost:8080/api/v1/elevator/call?direction=UP&userCurrentFloor=7&destinationFloor=15
 
 # Command for the fireman
 
 user: fireman
 password: fireman
 
-     curl -X POST -u fireman:fireman http://localhost:8080/api/v1/elevator/priority?direction=UP&floor=1
+     curl -X POST -u fireman:fireman http://localhost:8080/api/v1/elevator/priority?direction=UP&firemanCurrentFloor=7&destinationFloor=20
 
 Note that the V1 version is for when only one lift is available
 

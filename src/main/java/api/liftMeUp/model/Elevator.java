@@ -5,13 +5,18 @@ import api.liftMeUp.commun.constants.Direction;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.TreeSet;
+
 @Getter
+@Setter
 public final class Elevator {
     private String id;
     private int currentFloor;
     private Direction direction;
     private int capacity;
     private int maxCapacity;
+    private final TreeSet<Integer> upRequests = new TreeSet<>();
+    private final TreeSet<Integer> downRequests = new TreeSet<>();
 
     private Elevator(Builder builder) {
         this.id = builder.id;
@@ -19,6 +24,7 @@ public final class Elevator {
         this.direction = builder.direction;
         this.capacity = builder.capacity;
         this.maxCapacity = builder.maxCapacity;
+
     }
 
     public static class Builder {

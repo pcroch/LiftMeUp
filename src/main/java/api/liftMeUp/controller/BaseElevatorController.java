@@ -11,7 +11,11 @@ import javax.validation.constraints.Min;
 
 @RestController
 public abstract class BaseElevatorController {
-    public abstract ResponseEntity getElevator(@RequestParam @NonNull Direction direction, @RequestParam @NonNull @Min(value = 0) @Max(value = 50) Integer floor);
+    public abstract ResponseEntity getElevator(@RequestParam @NonNull Direction direction,
+                                               @RequestParam @NonNull @Min(value = 0) @Max(value = 50) Integer userCurrentFloor,
+                                               @RequestParam @NonNull @Min(value = 0) @Max(value = 50) Integer destinationFloor);
 
-    public abstract ResponseEntity getPriority(@RequestParam @NonNull Direction direction, @RequestParam @NonNull @Min(value = 0) @Max(value = 50) Integer floor);
+    public abstract ResponseEntity getPriority(@RequestParam @NonNull Direction direction,
+                                               @RequestParam @NonNull @Min(value = 0) @Max(value = 50) Integer firemanCurrentFloor,
+                                               @RequestParam @NonNull @Min(value = 0) @Max(value = 50) Integer destinationFloor);
 }
