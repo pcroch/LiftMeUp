@@ -1,5 +1,7 @@
 package api.liftMeUp.controller.v1;
 
+import api.liftMeUp.commun.annotations.isFireman;
+import api.liftMeUp.commun.constants.Direction;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import api.liftMeUp.controller.BaseElevatorController;
@@ -8,7 +10,11 @@ import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 
 @Slf4j
 @RestController
@@ -22,10 +28,19 @@ public class ElevatorControllerV1 extends BaseElevatorController {
         this.elevatorService = elevatorService;
     }
 
+//    @PreAuthorize("permitAll()")
     @RequestMapping("/call")
-    @PostMapping(value = "/url", produces = "application/json")
-    public ResponseEntity<String> setDirection(@RequestParam @NonNull String direction, @RequestParam @NonNull Integer requesterFloor) { // variable name should be changes
-        elevatorService.setDirection(direction, requesterFloor); //  method name should be changed
-        return ResponseEntity.status(HttpStatus.OK).build(); // perhaps making it not waiting? as it hangs forever with "socket hang up" error
+    @PostMapping
+    public ResponseEntity getElevator(@RequestParam @NonNull Direction direction, @RequestParam @NonNull  @Min(value=0) @Max(value=50) Integer floor) {
+        elevatorService.setDirection(direction, floor);
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
+
+    @isFireman
+    @RequestMapping("/priority")
+    @PostMapping
+    public ResponseEntity getPriority(@RequestParam @NonNull Direction direction, @RequestParam @NonNull  @Min(value=0) @Max(value=50) Integer floor) {
+        elevatorService.setPriority(direction, floor);
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 }
