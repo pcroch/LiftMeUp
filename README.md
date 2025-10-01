@@ -18,7 +18,13 @@
 
 # Command for a non-authenticated user
 
-    curl -X POST http://localhost:8080/api/v1/elevator/call?direction=UP&userCurrentFloor=7&destinationFloor=15
+to pick up the elevator: 
+
+    curl -X POST http://localhost:8080/api/v1/elevator/pickup?direction=UP&userCurrentFloor=5
+
+to choose a floor:
+
+    curl -X POST http://localhost:8080/api/v1/elevator/destination?destinationFloor=9
 
 # Command for the fireman
 
@@ -26,6 +32,14 @@ user: fireman
 password: fireman
 
      curl -X POST -u fireman:fireman http://localhost:8080/api/v1/elevator/priority?direction=UP&firemanCurrentFloor=7&destinationFloor=20
+
+to have a priority pick up of the elevator:
+
+    curl -X POST -u fireman:fireman http://localhost:8080/api/v1/elevator/priority-pickup?direction=UP&userCurrentFloor=5
+
+to choose a floor imn priority:
+
+    curl -X POST -u fireman:fireman http://localhost:8080/api/v1/elevator/priority-destination?destinationFloor=9
 
 Note that the V1 version is for when only one lift is available
 

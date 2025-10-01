@@ -21,9 +21,7 @@ import java.util.concurrent.ScheduledExecutorService;
 @Slf4j
 @RestController
 @RequestMapping("/api/v1/elevator")
-public class ElevatorControllerV1 {//extends BaseElevatorController
-
-    private final ScheduledExecutorService controllerThread = Executors.newSingleThreadScheduledExecutor();
+public class ElevatorControllerV1 implements BaseElevatorController {
     private final ElevatorServiceImpl elevatorService;
 
     @Autowired
@@ -44,7 +42,7 @@ public class ElevatorControllerV1 {//extends BaseElevatorController
     @RequestMapping("/destination")
     @PostMapping
     public ResponseEntity requestDestination(
-            @RequestParam @NonNull @Min(value = 0) @Max(value = 50) Integer destinationFloor) { //todo validation that userCurrentFloor < destinationFloor then up
+            @RequestParam @NonNull @Min(value = 0) @Max(value = 50) Integer destinationFloor) {
 
         elevatorService.requestDestination(destinationFloor);
 
@@ -52,11 +50,19 @@ public class ElevatorControllerV1 {//extends BaseElevatorController
     }
 
     @isFireman
-    @RequestMapping("/priority")
+    @RequestMapping("/priority-pickup")
     @PostMapping
-    public ResponseEntity getPriority(@RequestParam @NonNull Direction direction,
-                                      @RequestParam @NonNull @Min(value = 0) @Max(value = 50) Integer firemanCurrentFloor,
-                                      @RequestParam @NonNull @Min(value = 0) @Max(value = 50) Integer destinationFloor) {
+    public ResponseEntity getPriorityPickUp(@RequestParam @NonNull Direction direction,
+                                            @RequestParam @NonNull @Min(value = 0) @Max(value = 50) Integer userCurrentFloor) {
+//        elevatorService.setPriority(direction, firemanCurrentFloor, destinationFloor);
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
+
+    @isFireman
+    @RequestMapping("/priority-destination")
+    @PostMapping
+    public ResponseEntity getPriorityDestination(
+            @RequestParam @NonNull @Min(value = 0) @Max(value = 50) Integer destinationFloor) {
 //        elevatorService.setPriority(direction, firemanCurrentFloor, destinationFloor);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
