@@ -1,5 +1,8 @@
 ### Spring Boot
 
+## JAVA and Spring versions
+    java 11 and spring 2.7.9
+
 ## Build the app
 
     mvn clean install

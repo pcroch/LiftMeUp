@@ -11,8 +11,8 @@
     <groupId>com.example</groupId>
     <artifactId>lift-me-up</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>spring-blue-print</name>
-    <description>spring-blue-print</description>
+    <name>lift-me-up</name>
+    <description>lift-me-up</description>
     <properties>
         <java.version>11</java.version>
     </properties>
