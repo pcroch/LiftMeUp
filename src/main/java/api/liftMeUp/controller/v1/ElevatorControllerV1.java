@@ -26,17 +26,17 @@ public class ElevatorControllerV1 extends BaseElevatorController {
     }
 
 //    @PreAuthorize("permitAll()")
-    @RequestMapping("/call") //todo making the call async
+    @RequestMapping("/call")
     @PostMapping(value = "/url", produces = "application/json") // thsi ligne should  be removed
-    public ResponseEntity<String> getElevator(@RequestParam @NonNull Direction direction, @RequestParam @NonNull Integer floor) {
+    public ResponseEntity getElevator(@RequestParam @NonNull Direction direction, @RequestParam @NonNull Integer floor) {
         elevatorService.setDirection(direction, floor);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
     @isFireman
-    @RequestMapping("/priority") //todo making the call async
+    @RequestMapping("/priority")
     @PostMapping(value = "/url", produces = "application/json")
-    public ResponseEntity<String> getPriority(@RequestParam @NonNull Direction direction, @RequestParam @NonNull Integer floor) {  // using overloading? dupliacte method?
+    public ResponseEntity getPriority(@RequestParam @NonNull Direction direction, @RequestParam @NonNull Integer floor) {  // using overloading? dupliacte method?
         elevatorService.setPriority(direction, floor);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
