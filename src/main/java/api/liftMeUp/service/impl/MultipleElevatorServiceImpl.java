@@ -13,7 +13,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 @Service
-public class ElevatorServiceImpl implements ElevatorService {
+public class MultipleElevatorServiceImpl implements ElevatorService {
 
     private int currentFloor;
     private final ScheduledExecutorService elevatorThread = Executors.newSingleThreadScheduledExecutor();
@@ -27,7 +27,7 @@ public class ElevatorServiceImpl implements ElevatorService {
     private final ApplicationConfiguration configuration;
 
     @Autowired
-    public ElevatorServiceImpl( ApplicationConfiguration configuration){
+    public MultipleElevatorServiceImpl(ApplicationConfiguration configuration){
         this.configuration = configuration;
     }
 

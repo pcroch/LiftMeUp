@@ -15,5 +15,6 @@ where PID is the PID of port 8080
 
 ### Nice to have
 
-1.  Having  polling to have async requests
-2.  @PreAuthorize("permitAll()") on call method
+1. Unit testing
+2. Having  polling to have async requests
+3. @PreAuthorize("permitAll()") on call method
