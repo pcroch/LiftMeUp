@@ -19,7 +19,7 @@ public interface  BaseElevatorController {
 
     @isFireman
     public abstract ResponseEntity getPriorityPickUp(@RequestParam @NonNull Direction direction,
-                                                     @RequestParam @NonNull @Min(value = 0) @Max(value = 50) Integer userCurrentFloor);
+                                                     @RequestParam @NonNull @Min(value = 0) @Max(value = 50) Integer firemanCurrentFloor);
 
     @isFireman
     public abstract ResponseEntity getPriorityDestination(

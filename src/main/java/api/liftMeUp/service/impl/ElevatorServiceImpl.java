@@ -45,8 +45,9 @@ public class ElevatorServiceImpl { //implements ElevatorService
             elevator.setDirection(Direction.UP);
             upRequests.add(userCurrentFloor);
         } else if (userCurrentFloor < elevator.getCurrentFloor()) {
-            downRequests.add(userCurrentFloor);
             elevator.setDirection(Direction.DOWN);
+            downRequests.add(userCurrentFloor);
+
         }
         notify();
     }
@@ -62,44 +63,50 @@ public class ElevatorServiceImpl { //implements ElevatorService
         notify();
     }
 
-//    public synchronized void setPriority(Direction requestDirection, int firemanCurrentFloor, int destinationFloor) {
-//
-//        if (Direction.UP.equals(requestDirection)) {
-//            direction = Direction.UP;
-//            upPriorityRequests.add(destinationFloor);
-//        } else if (Direction.DOWN.equals(requestDirection)) {
-//            downPriorityRequests.add(destinationFloor);
-//            direction = Direction.DOWN;
-//        }
-//
-//        if (firemanCurrentFloor > currentElevatorFloor) {
-//            upRequests.add(firemanCurrentFloor);
-//        } else if (firemanCurrentFloor > currentElevatorFloor) {
-//            downRequests.add(firemanCurrentFloor);
-//        }
-//
-//        notify();
-//    }
+    public synchronized void requestPriorityPickUp(Direction direction, int firemanCurrentFloor) {
+        requestDirection = direction;
+
+        if (firemanCurrentFloor > elevator.getCurrentFloor()) {
+            elevator.setDirection(Direction.UP);
+            upPriorityRequests.add(firemanCurrentFloor);
+        } else if (firemanCurrentFloor < elevator.getCurrentFloor()) {
+            elevator.setDirection(Direction.DOWN);
+            downPriorityRequests.add(firemanCurrentFloor);
+
+        }
+        notify();
+    }
+
+    public synchronized void requestPriorityDestination(int destinationFloor) {
+        if (Direction.UP.equals(requestDirection)) {
+            elevator.setDirection(Direction.UP);
+            upPriorityRequests.add(destinationFloor);
+        } else if (Direction.DOWN.equals(requestDirection)) {
+            elevator.setDirection(Direction.DOWN);
+            downPriorityRequests.add(destinationFloor);
+        }
+        notify();
+    }
 
     private synchronized void scan() {
         try {
-//            if (!upPriorityRequests.isEmpty() || !downPriorityRequests.isEmpty()) {
-//                if (direction == Direction.UP) {
-//                    while (!upPriorityRequests.isEmpty()) {
-//                        int nextFloor = upPriorityRequests.pollFirst();
-//                        travelTo(nextFloor);
-//                    }
-//                    direction = Direction.DOWN;
-//                }
-//
-//                if (direction == Direction.DOWN) {
-//                    while (!downPriorityRequests.isEmpty()) {
-//                        int nextFloor = downPriorityRequests.pollFirst();
-//                        travelTo(nextFloor);
-//                    }
-//                    direction = Direction.UP;
-//                }
-//            }
+            if (!upPriorityRequests.isEmpty() || !downPriorityRequests.isEmpty()) {
+                if (Direction.UP.equals(elevator.getDirection())) {
+                    while (!upPriorityRequests.isEmpty()) {
+                        int nextFloor = upPriorityRequests.pollFirst();
+                        travelTo(nextFloor);
+                    }
+                    elevator.setDirection(Direction.DOWN);
+                }
+
+                if (Direction.DOWN.equals(elevator.getDirection())) {
+                    while (!downPriorityRequests.isEmpty()) {
+                        int nextFloor = downPriorityRequests.pollFirst();
+                        travelTo(nextFloor);
+                    }
+                    elevator.setDirection(Direction.UP);
+                }
+            }
 
             if (upRequests.isEmpty() && downRequests.isEmpty()) {
                 elevator.setDirection(Direction.STATIONARY);
@@ -107,7 +114,7 @@ public class ElevatorServiceImpl { //implements ElevatorService
             }
 
 
-            if (elevator.getDirection() == Direction.UP) {
+            if (Direction.UP.equals(elevator.getDirection())) {
                 while (!upRequests.isEmpty()) {
                     // using generic to make it array agnostic for fireman queue of user queue
 
@@ -117,7 +124,7 @@ public class ElevatorServiceImpl { //implements ElevatorService
                 elevator.setDirection(Direction.DOWN);
             }
 
-            if (elevator.getDirection() == Direction.DOWN) {
+            if (Direction.DOWN.equals(elevator.getDirection())) {
                 while (!downRequests.isEmpty()) {
 
                     int nextFloor = downRequests.pollFirst();
@@ -144,7 +151,7 @@ public class ElevatorServiceImpl { //implements ElevatorService
                 elevator.setCurrentFloor(elevator.getCurrentFloor() - 1);
                 ;
             }
-            System.out.println("...now at floor " + elevator.getCurrentFloor()); //todo changing the logging
+            System.out.println("...now at floor " + elevator.getCurrentFloor() + " and direction is " + elevator.getDirection().name()); //todo changing the logging
         }
         elevator.setCurrentFloor(destinationFloor);
 

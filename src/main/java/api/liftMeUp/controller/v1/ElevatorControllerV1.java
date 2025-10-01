@@ -53,8 +53,8 @@ public class ElevatorControllerV1 implements BaseElevatorController {
     @RequestMapping("/priority-pickup")
     @PostMapping
     public ResponseEntity getPriorityPickUp(@RequestParam @NonNull Direction direction,
-                                            @RequestParam @NonNull @Min(value = 0) @Max(value = 50) Integer userCurrentFloor) {
-//        elevatorService.setPriority(direction, firemanCurrentFloor, destinationFloor);
+                                            @RequestParam @NonNull @Min(value = 0) @Max(value = 50) Integer firemanCurrentFloor) {
+        elevatorService.requestPriorityPickUp(direction, firemanCurrentFloor);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
@@ -63,7 +63,7 @@ public class ElevatorControllerV1 implements BaseElevatorController {
     @PostMapping
     public ResponseEntity getPriorityDestination(
             @RequestParam @NonNull @Min(value = 0) @Max(value = 50) Integer destinationFloor) {
-//        elevatorService.setPriority(direction, firemanCurrentFloor, destinationFloor);
+        elevatorService.requestPriorityDestination(destinationFloor);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 }

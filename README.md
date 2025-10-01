@@ -13,35 +13,37 @@
 
 ## Technical specification 
 
- 1. direction is a enum and I can only be DOWN, UP or STATIONARY 
- 2. floor is a number between 0 and 50
+ the V1 version is for  only one lift available.
+
+1. direction is a enum and I can only be DOWN, UP or STATIONARY 
+2. userCurrentFloor is a number between 0 and 50
+3. firemanCurrentFloor is a number between 0 and 50
+4. destinationFloor is a number between 0 and 50
 
 # Command for a non-authenticated user
 
-to pick up the elevator: 
+* to pick up the elevator: 
 
-    curl -X POST http://localhost:8080/api/v1/elevator/pickup?direction=UP&userCurrentFloor=5
+        curl -X POST http://localhost:8080/api/v1/elevator/pickup?direction=UP&userCurrentFloor=5
 
-to choose a floor:
+* to choose a floor:
 
-    curl -X POST http://localhost:8080/api/v1/elevator/destination?destinationFloor=9
+      curl -X POST http://localhost:8080/api/v1/elevator/destination?destinationFloor=9
 
 # Command for the fireman
 
-user: fireman
-password: fireman
+    user: fireman
+    password: fireman
 
-     curl -X POST -u fireman:fireman http://localhost:8080/api/v1/elevator/priority?direction=UP&firemanCurrentFloor=7&destinationFloor=20
+* to have a priority pick up of the elevator:
 
-to have a priority pick up of the elevator:
+        curl -X POST -u fireman:fireman http://localhost:8080/api/v1/elevator/priority-pickup?direction=UP&firemanCurrentFloor=5
 
-    curl -X POST -u fireman:fireman http://localhost:8080/api/v1/elevator/priority-pickup?direction=UP&userCurrentFloor=5
+* to choose a floor in priority:
 
-to choose a floor imn priority:
+      curl -X POST -u fireman:fireman http://localhost:8080/api/v1/elevator/priority-destination?destinationFloor=8
 
-    curl -X POST -u fireman:fireman http://localhost:8080/api/v1/elevator/priority-destination?destinationFloor=9
 
-Note that the V1 version is for when only one lift is available
 
 # Optional Settings
 
