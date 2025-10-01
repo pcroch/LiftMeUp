@@ -1,6 +1,7 @@
 package api.liftMeUp.controller.v1;
 
 import api.liftMeUp.commun.annotations.isFireman;
+import api.liftMeUp.commun.constants.Direction;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import api.liftMeUp.controller.BaseElevatorController;
@@ -27,7 +28,7 @@ public class ElevatorControllerV1 extends BaseElevatorController {
 //    @PreAuthorize("permitAll()")
     @RequestMapping("/call") //todo making the call async
     @PostMapping(value = "/url", produces = "application/json") // thsi ligne should  be removed
-    public ResponseEntity<String> getElevator(@RequestParam @NonNull String direction, @RequestParam @NonNull Integer floor) { // direction sdhould not be case sensitive
+    public ResponseEntity<String> getElevator(@RequestParam @NonNull Direction direction, @RequestParam @NonNull Integer floor) {
         elevatorService.setDirection(direction, floor);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
@@ -35,7 +36,7 @@ public class ElevatorControllerV1 extends BaseElevatorController {
     @isFireman
     @RequestMapping("/priority") //todo making the call async
     @PostMapping(value = "/url", produces = "application/json")
-    public ResponseEntity<String> getPriority(@RequestParam @NonNull String direction, @RequestParam @NonNull Integer floor) {  // using overloading? dupliacte method?
+    public ResponseEntity<String> getPriority(@RequestParam @NonNull Direction direction, @RequestParam @NonNull Integer floor) {  // using overloading? dupliacte method?
         elevatorService.setPriority(direction, floor);
         return ResponseEntity.status(HttpStatus.OK).build();
     }

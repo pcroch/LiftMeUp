@@ -27,24 +27,24 @@ public class ElevatorServiceImpl {
         elevatorThread.scheduleAtFixedRate(this::scan, 0, 1000, TimeUnit.MILLISECONDS); //todo check request is the traveltime?
     } // ScheduledExecutorService is better?
 
-    public synchronized void setDirection(String inputDirection, int floor) {
+    public synchronized void setDirection(Direction inputDirection, int floor) {
         //todo inputDirection should be an enum
-        if (Direction.UP.toString().equals(inputDirection)) {
+        if (Direction.UP.equals(inputDirection)) {
             direction = Direction.UP;
             upRequests.add(floor);
-        } else if (Direction.DOWN.toString().equals(inputDirection)) {
+        } else if (Direction.DOWN.equals(inputDirection)) {
             downRequests.add(floor);
             direction = Direction.DOWN;
         }
         notify();
     }
 
-    public synchronized void setPriority(String inputDirection, int floor) {
+    public synchronized void setPriority(Direction inputDirection, int floor) {
         //todo inputDirection should be an enum
-        if (Direction.UP.toString().equals(inputDirection)) {
+        if (Direction.UP.equals(inputDirection)) {
             direction = Direction.UP;
             upPriorityRequests.add(floor);
-        } else if (Direction.DOWN.toString().equals(inputDirection)) {
+        } else if (Direction.DOWN.equals(inputDirection)) {
             downPriorityRequests.add(floor);
             direction = Direction.DOWN;
         }
