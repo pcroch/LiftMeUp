@@ -1,5 +1,6 @@
 package api.liftMeUp.service.impl;
 
+import api.liftMeUp.commun.constants.Direction;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
@@ -20,9 +21,9 @@ public class ElevatorServiceImpl {
     private final TreeSet<Integer> downRequests = new TreeSet<>();
 
     @PostConstruct
-    public void startElevator()  {
-        executor.scheduleAtFixedRate(this::scan, 0, 1000, TimeUnit.MILLISECONDS);
-    }
+    public void startElevator() {
+        executor.scheduleAtFixedRate(this::scan, 0, 1000, TimeUnit.MILLISECONDS); //todo check request is the traveltime?
+    } // ScheduledExecutorService is better?
 
     public synchronized void setDirection(String inputDirection, int floor) { // name ot be change
         //todo inputDirection should be an enum
@@ -68,7 +69,7 @@ public class ElevatorServiceImpl {
         System.out.println("Elevator at floor " + currentFloor + ", moving to " + destinationFloor); //todo changing the logging
         int floorsToTravel = Math.abs(destinationFloor - currentFloor);
         for (int i = 0; i < floorsToTravel; i++) {
-            Thread.sleep(floorTravelTimeMs); // need top be set up externally
+            Thread.sleep(floorTravelTimeMs); // need top be set up externally or remvoed as startElevator is already doing the job?
             if (currentFloor < destinationFloor) {
                 currentFloor++;
             } else {
@@ -78,9 +79,4 @@ public class ElevatorServiceImpl {
         }
         System.out.println("Elevator arrived at floor " + currentFloor + ". Doors opening."); //todo changing the logging
     }
-
-    public enum Direction { // using another class ?
-        UP, DOWN, STATIONARY
-    }
-
 }

@@ -1,5 +1,6 @@
 package api.liftMeUp.controller.v1;
 
+import api.liftMeUp.commun.annotations.isFireman;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import api.liftMeUp.controller.BaseElevatorController;
@@ -8,6 +9,7 @@ import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @Slf4j
@@ -22,10 +24,18 @@ public class ElevatorControllerV1 extends BaseElevatorController {
         this.elevatorService = elevatorService;
     }
 
-    @RequestMapping("/call")
-    @PostMapping(value = "/url", produces = "application/json")
+    @PreAuthorize("permitAll()")
+    @RequestMapping("/call") //todo making the call async
+    @PostMapping(value = "/url", produces = "application/json") // thsi ligne should  be removed
     public ResponseEntity<String> setDirection(@RequestParam @NonNull String direction, @RequestParam @NonNull Integer requesterFloor) { // variable name should be changes
         elevatorService.setDirection(direction, requesterFloor); //  method name should be changed
         return ResponseEntity.status(HttpStatus.OK).build(); // perhaps making it not waiting? as it hangs forever with "socket hang up" error
+    }
+
+    @isFireman
+    @RequestMapping("/priority") //todo making the call async
+    @PostMapping(value = "/url", produces = "application/json")
+    public ResponseEntity<String> getPriority(@RequestParam @NonNull String direction, @RequestParam @NonNull Integer floor) {  // using overloading? dupliacte method?
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }
