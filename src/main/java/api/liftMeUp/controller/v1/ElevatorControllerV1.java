@@ -24,12 +24,12 @@ public class ElevatorControllerV1 extends BaseElevatorController {
         this.elevatorService = elevatorService;
     }
 
-    @PreAuthorize("permitAll()")
+//    @PreAuthorize("permitAll()")
     @RequestMapping("/call") //todo making the call async
     @PostMapping(value = "/url", produces = "application/json") // thsi ligne should  be removed
-    public ResponseEntity<String> setDirection(@RequestParam @NonNull String direction, @RequestParam @NonNull Integer requesterFloor) { // variable name should be changes
-        elevatorService.setDirection(direction, requesterFloor); //  method name should be changed
-        return ResponseEntity.status(HttpStatus.OK).build(); // perhaps making it not waiting? as it hangs forever with "socket hang up" error
+    public ResponseEntity<String> getElevator(@RequestParam @NonNull String direction, @RequestParam @NonNull Integer floor) { // direction sdhould not be case sensitive
+        elevatorService.setDirection(direction, floor);
+        return ResponseEntity.status(HttpStatus.OK).build(); // perhaps making it not waiting? as it hangs forever with "socket hang up" error ==> async reuqest
     }
 
     @isFireman

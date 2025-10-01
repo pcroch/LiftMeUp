@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public abstract class BaseElevatorController {
-    public abstract ResponseEntity<String> setDirection(@RequestParam @NonNull String direction, @RequestParam @NonNull Integer requesterFloor); //todo return type should be a map with floor and direction
+    public abstract ResponseEntity<String> getElevator(@RequestParam @NonNull String direction, @RequestParam @NonNull Integer floor); //todo return type should be a map with floor and direction
 
+    public abstract ResponseEntity<String> getPriority(@RequestParam @NonNull String direction, @RequestParam @NonNull Integer floor);
 }

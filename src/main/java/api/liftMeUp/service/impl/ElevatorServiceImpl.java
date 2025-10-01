@@ -13,19 +13,18 @@ import java.util.concurrent.TimeUnit;
 public class ElevatorServiceImpl {
 
     private int currentFloor;
-
     int floorTravelTimeMs = 500; // should be configurable
-    private final ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
+    private final ScheduledExecutorService elevatorThread = Executors.newSingleThreadScheduledExecutor();
     private Direction direction = Direction.STATIONARY;
     private final TreeSet<Integer> upRequests = new TreeSet<>();
     private final TreeSet<Integer> downRequests = new TreeSet<>();
 
     @PostConstruct
     public void startElevator() {
-        executor.scheduleAtFixedRate(this::scan, 0, 1000, TimeUnit.MILLISECONDS); //todo check request is the traveltime?
+        elevatorThread.scheduleAtFixedRate(this::scan, 0, 1000, TimeUnit.MILLISECONDS); //todo check request is the traveltime?
     } // ScheduledExecutorService is better?
 
-    public synchronized void setDirection(String inputDirection, int floor) { // name ot be change
+    public synchronized void setDirection(String inputDirection, int floor) {
         //todo inputDirection should be an enum
         if (Direction.UP.toString().equals(inputDirection)) {
             direction = Direction.UP;

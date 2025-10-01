@@ -6,7 +6,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.web.SecurityFilterChain;
 
-//@EnableWebSecurity
+@EnableWebSecurity
 @Configuration
 public class SecurityConfig {
 
@@ -15,7 +15,7 @@ public class SecurityConfig {
         http
                 .csrf().disable()
                 .authorizeRequests()
-//                .antMatchers("/api/v1/elevator/call").permitAll() // Access for everyone
+                .antMatchers("/api/v1/elevator/call").permitAll() // Access for everyone
 //                .antMatchers("/api/v1/elevator/priority").hasRole("ADMIN") // Access only for Fireman
                 .anyRequest().authenticated()
                 .and()
