@@ -4,11 +4,13 @@ import api.liftMeUp.commun.constants.Direction;
 
 public interface ElevatorService {
 
-
     void startElevator();
 
-    void setDirection(Direction inputDirection, int userCurrentFloor, int destinationFloor);
+    void requestPickup(Direction direction, int userCurrentFloor);
 
-    void setPriority(Direction inputDirection, int firemanCurrentFloor, int destinationFloor);
+    void requestDestination(int destinationFloor);
 
+    void requestPriorityPickUp(Direction direction, int firemanCurrentFloor);
+
+    void requestPriorityDestination(int destinationFloor);
 }

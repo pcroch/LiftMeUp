@@ -4,6 +4,7 @@ import api.liftMeUp.commun.constants.Direction;
 import api.liftMeUp.component.ApplicationConfiguration;
 import api.liftMeUp.model.Elevator;
 import api.liftMeUp.service.ElevatorService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,8 +14,9 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+@Slf4j
 @Service
-public class ElevatorServiceImpl { //implements ElevatorService
+public class ElevatorServiceImpl implements ElevatorService {
 
     private final Elevator elevator = new Elevator.Builder("elevator").capacity(0).currentFloor(10).build();
 
@@ -92,19 +94,11 @@ public class ElevatorServiceImpl { //implements ElevatorService
         try {
             if (!upPriorityRequests.isEmpty() || !downPriorityRequests.isEmpty()) {
                 if (Direction.UP.equals(elevator.getDirection())) {
-                    while (!upPriorityRequests.isEmpty()) {
-                        int nextFloor = upPriorityRequests.pollFirst();
-                        travelTo(nextFloor);
-                    }
-                    elevator.setDirection(Direction.DOWN);
+                    handelingUpDirection(upPriorityRequests);
                 }
 
                 if (Direction.DOWN.equals(elevator.getDirection())) {
-                    while (!downPriorityRequests.isEmpty()) {
-                        int nextFloor = downPriorityRequests.pollFirst();
-                        travelTo(nextFloor);
-                    }
-                    elevator.setDirection(Direction.UP);
+                    handelingDownDirection(downPriorityRequests);
                 }
             }
 
@@ -115,32 +109,37 @@ public class ElevatorServiceImpl { //implements ElevatorService
 
 
             if (Direction.UP.equals(elevator.getDirection())) {
-                while (!upRequests.isEmpty()) {
-                    // using generic to make it array agnostic for fireman queue of user queue
-
-                    int nextFloor = upRequests.pollFirst();
-                    travelTo(nextFloor);
-                }
-                elevator.setDirection(Direction.DOWN);
+                handelingUpDirection(upRequests);
             }
 
             if (Direction.DOWN.equals(elevator.getDirection())) {
-                while (!downRequests.isEmpty()) {
-
-                    int nextFloor = downRequests.pollFirst();
-                    travelTo(nextFloor);
-                }
-                elevator.setDirection(Direction.UP);
+                handelingDownDirection(downRequests);
             }
 
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
-            System.err.println("Elevator thread was interrupted."); //todo changing the logging
+            log.error("Elevator thread was interrupted.");
         }
     }
 
-    private void travelTo(int destinationFloor) throws InterruptedException {
-        System.out.println("Elevator at floor " + elevator.getCurrentFloor() + ", moving to " + destinationFloor); //todo changing the logging
+    private void handelingUpDirection(TreeSet<Integer> request) throws InterruptedException {
+        while (!request.isEmpty()) {
+            int nextFloor = request.pollFirst();
+            movingElevatorTo(nextFloor);
+        }
+        elevator.setDirection(Direction.DOWN);
+    }
+
+    private void handelingDownDirection(TreeSet<Integer> request) throws InterruptedException {
+        while (!downPriorityRequests.isEmpty()) {
+            int nextFloor = downPriorityRequests.pollFirst();
+            movingElevatorTo(nextFloor);
+        }
+        elevator.setDirection(Direction.UP);
+    }
+
+    private void movingElevatorTo(int destinationFloor) throws InterruptedException {
+        System.out.println("Elevator at floor " + elevator.getCurrentFloor() + ", moving to " + destinationFloor);
         int floorsToTravel = Math.abs(destinationFloor - elevator.getCurrentFloor());
         for (int i = 0; i < floorsToTravel; i++) {
             Thread.sleep(configuration.getFloorTravelTime());
@@ -151,11 +150,10 @@ public class ElevatorServiceImpl { //implements ElevatorService
                 elevator.setCurrentFloor(elevator.getCurrentFloor() - 1);
                 ;
             }
-            System.out.println("...now at floor " + elevator.getCurrentFloor() + " and direction is " + elevator.getDirection().name()); //todo changing the logging
+            System.out.println("...now at floor " + elevator.getCurrentFloor() + " and direction is " + elevator.getDirection().name());
         }
         elevator.setCurrentFloor(destinationFloor);
 
-        System.out.println("Elevator arrived at floor " + elevator.getCurrentFloor() + ". Doors opening."); //todo changing the logging
+        System.out.println("Elevator arrived at floor " + elevator.getCurrentFloor() + ". Doors opening.");
     }
-
 }
