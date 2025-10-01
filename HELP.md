@@ -1,29 +1,13 @@
 ### Spring Boot
 
-## Build the app
+Web server failed to start. Port 8080 was already in use.
 
-    mvn clean install
+Action:
 
-## Run the app
+    sudo lsof -i tcp:8080
 
-    mvn spring-boot:run
+then
 
-# Command
+    kill -15 PID 
 
-    curl -X POST http://localhost:8080/api/v1/elevator/call?direction=UP&requesterFloor=50
-
-Where direction can only be DOWN or UP and  the floor is a number between 0 and 50
-
-Note that the V1 version is for when only one lift is available
-
-# Optional Settings
-
-You can choose the time to travel of the lift via the config file.
-
-
- ### Have fun and enjoy!
-
-    
-
-
-
+where PID is the PID of port 8080
