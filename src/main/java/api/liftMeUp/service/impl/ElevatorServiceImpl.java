@@ -2,6 +2,9 @@ package api.liftMeUp.service.impl;
 
 import api.liftMeUp.commun.constants.Direction;
 import api.liftMeUp.component.ApplicationConfiguration;
+import api.liftMeUp.model.Elevator;
+import api.liftMeUp.service.ElevatorService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -11,50 +14,78 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+@Slf4j
 @Service
-public class ElevatorServiceImpl {
+public class ElevatorServiceImpl implements ElevatorService {
 
-    private int currentFloor;
+    private final Elevator elevator = new Elevator.Builder("elevator").capacity(0).currentFloor(10).build();
+
+    private Direction requestDirection;
     private final ScheduledExecutorService elevatorThread = Executors.newSingleThreadScheduledExecutor();
-    private Direction direction = Direction.STATIONARY;
     private final TreeSet<Integer> upRequests = new TreeSet<>();
     private final TreeSet<Integer> downRequests = new TreeSet<>();
 
-    private final TreeSet<Integer> upPriorityRequests = new TreeSet<>(); // using linkedLIst or Concurent Link List
+    private final TreeSet<Integer> upPriorityRequests = new TreeSet<>();
     private final TreeSet<Integer> downPriorityRequests = new TreeSet<>();
 
     private final ApplicationConfiguration configuration;
 
     @Autowired
-    public ElevatorServiceImpl( ApplicationConfiguration configuration){
+    public ElevatorServiceImpl(ApplicationConfiguration configuration) {
         this.configuration = configuration;
     }
 
     @PostConstruct
     public void startElevator() {
         elevatorThread.scheduleAtFixedRate(this::scan, 0, configuration.getThreadScheduler(), TimeUnit.MILLISECONDS);
-    } // ScheduledExecutorService is better?
+    }
 
-    public synchronized void setDirection(Direction inputDirection, int floor) {
+    public synchronized void requestPickup(Direction direction, int userCurrentFloor) {
+        requestDirection = direction;
 
-        if (Direction.UP.equals(inputDirection)) {
-            direction = Direction.UP;
-            upRequests.add(floor);
-        } else if (Direction.DOWN.equals(inputDirection)) {
-            downRequests.add(floor);
-            direction = Direction.DOWN;
+        if (userCurrentFloor > elevator.getCurrentFloor()) {
+            elevator.setDirection(Direction.UP);
+            upRequests.add(userCurrentFloor);
+        } else if (userCurrentFloor < elevator.getCurrentFloor()) {
+            elevator.setDirection(Direction.DOWN);
+            downRequests.add(userCurrentFloor);
+
         }
         notify();
     }
 
-    public synchronized void setPriority(Direction inputDirection, int floor) {
+    public synchronized void requestDestination(int destinationFloor) {
+        if (Direction.UP.equals(requestDirection)) {
+            elevator.setDirection(Direction.UP);
+            upRequests.add(destinationFloor);
+        } else if (Direction.DOWN.equals(requestDirection)) {
+            elevator.setDirection(Direction.DOWN);
+            downRequests.add(destinationFloor);
+        }
+        notify();
+    }
 
-        if (Direction.UP.equals(inputDirection)) {
-            direction = Direction.UP;
-            upPriorityRequests.add(floor);
-        } else if (Direction.DOWN.equals(inputDirection)) {
-            downPriorityRequests.add(floor);
-            direction = Direction.DOWN;
+    public synchronized void requestPriorityPickUp(Direction direction, int firemanCurrentFloor) {
+        requestDirection = direction;
+
+        if (firemanCurrentFloor > elevator.getCurrentFloor()) {
+            elevator.setDirection(Direction.UP);
+            upPriorityRequests.add(firemanCurrentFloor);
+        } else if (firemanCurrentFloor < elevator.getCurrentFloor()) {
+            elevator.setDirection(Direction.DOWN);
+            downPriorityRequests.add(firemanCurrentFloor);
+
+        }
+        notify();
+    }
+
+    public synchronized void requestPriorityDestination(int destinationFloor) {
+        if (Direction.UP.equals(requestDirection)) {
+            elevator.setDirection(Direction.UP);
+            upPriorityRequests.add(destinationFloor);
+        } else if (Direction.DOWN.equals(requestDirection)) {
+            elevator.setDirection(Direction.DOWN);
+            downPriorityRequests.add(destinationFloor);
         }
         notify();
     }
@@ -62,66 +93,56 @@ public class ElevatorServiceImpl {
     private synchronized void scan() {
         try {
             if (!upPriorityRequests.isEmpty() || !downPriorityRequests.isEmpty()) {
-                if (direction == Direction.UP) {
-                    while (!upPriorityRequests.isEmpty()) {
-                        int nextFloor = upPriorityRequests.pollFirst();
-                        travelTo(nextFloor);
-                    }
-                    direction = Direction.DOWN;
-                }
-
-                if (direction == Direction.DOWN) {
-                    while (!downPriorityRequests.isEmpty()) {
-                        int nextFloor = downPriorityRequests.pollFirst();
-                        travelTo(nextFloor);
-                    }
-                    direction = Direction.UP;
-                }
+                handelingDirection(upPriorityRequests, downPriorityRequests);
             }
 
             if (upRequests.isEmpty() && downRequests.isEmpty()) {
-                direction = Direction.STATIONARY;
+                elevator.setDirection(Direction.STATIONARY);
                 wait();
             }
 
-
-            if (direction == Direction.UP) {
-                while (!upRequests.isEmpty()) { // using generic to make it array agnostic for fireman queue of user queue
-
-                    int nextFloor = upRequests.pollFirst();
-                    travelTo(nextFloor);
-                }
-                direction = Direction.DOWN;
-            }
-
-            if (direction == Direction.DOWN) {
-                while (!downRequests.isEmpty()) { // upRequests really?
-
-                    int nextFloor = downRequests.pollFirst();
-                    travelTo(nextFloor);
-                }
-                direction = Direction.UP;
-            }
+            handelingDirection(upRequests, downRequests);
 
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
-            System.err.println("Elevator thread was interrupted."); //todo changing the logging
+            log.error("Elevator thread was interrupted.");
         }
     }
 
-    private void travelTo(int destinationFloor) throws InterruptedException {
-        System.out.println("Elevator at floor " + currentFloor + ", moving to " + destinationFloor); //todo changing the logging
-        int floorsToTravel = Math.abs(destinationFloor - currentFloor);
+    private void handelingDirection(TreeSet<Integer> upRequestToHandle, TreeSet<Integer> downRequestToHandle) throws InterruptedException {
+        if (Direction.UP.equals(elevator.getDirection())) {
+            while (!upRequestToHandle.isEmpty()) {
+                int nextFloor = upRequestToHandle.pollFirst();
+                movingElevatorTo(nextFloor);
+            }
+            elevator.setDirection(Direction.DOWN);
+        }
+
+        if (Direction.DOWN.equals(elevator.getDirection())) {
+            while (!downRequestToHandle.isEmpty()) {
+                int nextFloor = downRequestToHandle.pollFirst();
+                movingElevatorTo(nextFloor);
+            }
+            elevator.setDirection(Direction.UP);
+        }
+    }
+
+    private void movingElevatorTo(int destinationFloor) throws InterruptedException {
+        System.out.println("Elevator at floor " + elevator.getCurrentFloor() + ", moving to " + destinationFloor);
+        int floorsToTravel = Math.abs(destinationFloor - elevator.getCurrentFloor());
         for (int i = 0; i < floorsToTravel; i++) {
             Thread.sleep(configuration.getFloorTravelTime());
 
-            if (currentFloor < destinationFloor) {
-                currentFloor++;
+            if (elevator.getCurrentFloor() < destinationFloor) {
+                elevator.setCurrentFloor(elevator.getCurrentFloor() + 1);
             } else {
-                currentFloor--;
+                elevator.setCurrentFloor(elevator.getCurrentFloor() - 1);
+                ;
             }
-            System.out.println("...now at floor " + currentFloor); //todo changing the logging
+            System.out.println("...now at floor " + elevator.getCurrentFloor() + " and direction is " + elevator.getDirection().name());
         }
-        System.out.println("Elevator arrived at floor " + currentFloor + ". Doors opening."); //todo changing the logging
+        elevator.setCurrentFloor(destinationFloor);
+
+        System.out.println("Elevator arrived at floor " + elevator.getCurrentFloor() + ". Doors opening.");
     }
 }

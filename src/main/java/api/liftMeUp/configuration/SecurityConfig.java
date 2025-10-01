@@ -15,7 +15,8 @@ public class SecurityConfig {
         http
                 .csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/api/v1/elevator/call").permitAll() // Access for everyone
+                .antMatchers("/api/v1/elevator/pickup").permitAll() // Access for everyone
+                .antMatchers("/api/v1/elevator/destination").permitAll() // Access for everyone
 //                .antMatchers("/api/v1/elevator/priority").hasRole("ADMIN") // Access only for Fireman
                 .anyRequest().authenticated()
                 .and()
