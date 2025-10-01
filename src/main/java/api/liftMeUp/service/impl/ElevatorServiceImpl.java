@@ -19,6 +19,9 @@ public class ElevatorServiceImpl {
     private final TreeSet<Integer> upRequests = new TreeSet<>();
     private final TreeSet<Integer> downRequests = new TreeSet<>();
 
+    private final TreeSet<Integer> upPriorityRequests = new TreeSet<>(); // using linkedLIst or Concurent Link List
+    private final TreeSet<Integer> downPriorityRequests = new TreeSet<>();
+
     @PostConstruct
     public void startElevator() {
         elevatorThread.scheduleAtFixedRate(this::scan, 0, 1000, TimeUnit.MILLISECONDS); //todo check request is the traveltime?
@@ -36,22 +39,62 @@ public class ElevatorServiceImpl {
         notify();
     }
 
+    public synchronized void setPriority(String inputDirection, int floor) {
+        //todo inputDirection should be an enum
+        if (Direction.UP.toString().equals(inputDirection)) {
+            direction = Direction.UP;
+            upPriorityRequests.add(floor);
+        } else if (Direction.DOWN.toString().equals(inputDirection)) {
+            downPriorityRequests.add(floor);
+            direction = Direction.DOWN;
+        }
+        notify();
+    }
+
     private synchronized void scan() {
         try {
+            if (!upPriorityRequests.isEmpty() || !downPriorityRequests.isEmpty()) {
+                if (direction == Direction.UP) {
+                    while (!upPriorityRequests.isEmpty()) {
+                        int nextFloor = upPriorityRequests.pollFirst();
+                        travelTo(nextFloor);
+                    }
+                    direction = Direction.DOWN;
+                }
+
+                if (direction == Direction.DOWN) {
+                    while (!downPriorityRequests.isEmpty()) {
+                        int nextFloor = downPriorityRequests.pollFirst();
+                        travelTo(nextFloor);
+                    }
+                    direction = Direction.UP;
+                }
+            }
+
             if (upRequests.isEmpty() && downRequests.isEmpty()) {
                 direction = Direction.STATIONARY;
                 wait();
             }
+
+
             if (direction == Direction.UP) {
-                while (!upRequests.isEmpty()) {
+                while (!upRequests.isEmpty()) { // using generic to make it array agnostic for fireman queue of user queue
+
+//                    if (!upPriorityRequests.isEmpty() || !downPriorityRequests.isEmpty()) {
+//                        break;
+//                    }
+
                     int nextFloor = upRequests.pollFirst();
                     travelTo(nextFloor);
+
+
                 }
                 direction = Direction.DOWN;
             }
 
             if (direction == Direction.DOWN) {
-                while (!upRequests.isEmpty()) {
+                while (!downRequests.isEmpty()) { // upRequests really?
+
                     int nextFloor = downRequests.pollFirst();
                     travelTo(nextFloor);
                 }
@@ -69,6 +112,11 @@ public class ElevatorServiceImpl {
         int floorsToTravel = Math.abs(destinationFloor - currentFloor);
         for (int i = 0; i < floorsToTravel; i++) {
             Thread.sleep(floorTravelTimeMs); // need top be set up externally or remvoed as startElevator is already doing the job?
+
+//            if (!upPriorityRequests.isEmpty() || !downPriorityRequests.isEmpty()) {
+//                break;
+//            }
+
             if (currentFloor < destinationFloor) {
                 currentFloor++;
             } else {

@@ -36,6 +36,7 @@ public class ElevatorControllerV1 extends BaseElevatorController {
     @RequestMapping("/priority") //todo making the call async
     @PostMapping(value = "/url", produces = "application/json")
     public ResponseEntity<String> getPriority(@RequestParam @NonNull String direction, @RequestParam @NonNull Integer floor) {  // using overloading? dupliacte method?
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        elevatorService.setPriority(direction, floor);
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 }
