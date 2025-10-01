@@ -93,13 +93,7 @@ public class ElevatorServiceImpl implements ElevatorService {
     private synchronized void scan() {
         try {
             if (!upPriorityRequests.isEmpty() || !downPriorityRequests.isEmpty()) {
-                if (Direction.UP.equals(elevator.getDirection())) {
-                    handelingUpDirection(upPriorityRequests);
-                }
-
-                if (Direction.DOWN.equals(elevator.getDirection())) {
-                    handelingDownDirection(downPriorityRequests);
-                }
+                handelingDirection(upPriorityRequests, downPriorityRequests);
             }
 
             if (upRequests.isEmpty() && downRequests.isEmpty()) {
@@ -107,14 +101,7 @@ public class ElevatorServiceImpl implements ElevatorService {
                 wait();
             }
 
-
-            if (Direction.UP.equals(elevator.getDirection())) {
-                handelingUpDirection(upRequests);
-            }
-
-            if (Direction.DOWN.equals(elevator.getDirection())) {
-                handelingDownDirection(downRequests);
-            }
+            handelingDirection(upRequests, downRequests);
 
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
@@ -122,20 +109,22 @@ public class ElevatorServiceImpl implements ElevatorService {
         }
     }
 
-    private void handelingUpDirection(TreeSet<Integer> request) throws InterruptedException {
-        while (!request.isEmpty()) {
-            int nextFloor = request.pollFirst();
-            movingElevatorTo(nextFloor);
+    private void handelingDirection(TreeSet<Integer> upRequestToHandle, TreeSet<Integer> downRequestToHandle) throws InterruptedException {
+        if (Direction.UP.equals(elevator.getDirection())) {
+            while (!upRequestToHandle.isEmpty()) {
+                int nextFloor = upRequestToHandle.pollFirst();
+                movingElevatorTo(nextFloor);
+            }
+            elevator.setDirection(Direction.DOWN);
         }
-        elevator.setDirection(Direction.DOWN);
-    }
 
-    private void handelingDownDirection(TreeSet<Integer> request) throws InterruptedException {
-        while (!downPriorityRequests.isEmpty()) {
-            int nextFloor = downPriorityRequests.pollFirst();
-            movingElevatorTo(nextFloor);
+        if (Direction.DOWN.equals(elevator.getDirection())) {
+            while (!downRequestToHandle.isEmpty()) {
+                int nextFloor = downRequestToHandle.pollFirst();
+                movingElevatorTo(nextFloor);
+            }
+            elevator.setDirection(Direction.UP);
         }
-        elevator.setDirection(Direction.UP);
     }
 
     private void movingElevatorTo(int destinationFloor) throws InterruptedException {
