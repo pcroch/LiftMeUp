@@ -6,3 +6,4 @@ spring:
 
 appConfig:
   floorTravelTime: 1000
+  threadScheduler: 1000

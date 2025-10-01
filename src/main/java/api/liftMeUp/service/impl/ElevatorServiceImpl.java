@@ -2,7 +2,6 @@ package api.liftMeUp.service.impl;
 
 import api.liftMeUp.commun.constants.Direction;
 import api.liftMeUp.component.ApplicationConfiguration;
-import lombok.Value;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -33,7 +32,7 @@ public class ElevatorServiceImpl {
 
     @PostConstruct
     public void startElevator() {
-        elevatorThread.scheduleAtFixedRate(this::scan, 0, 1000, TimeUnit.MILLISECONDS); //todo check request is the traveltime?
+        elevatorThread.scheduleAtFixedRate(this::scan, 0, configuration.getThreadScheduler(), TimeUnit.MILLISECONDS);
     } // ScheduledExecutorService is better?
 
     public synchronized void setDirection(Direction inputDirection, int floor) {

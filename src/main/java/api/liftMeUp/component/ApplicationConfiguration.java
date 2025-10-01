@@ -12,4 +12,5 @@ import org.springframework.stereotype.Component;
 @ConfigurationProperties(prefix = "appConfig")
 public class ApplicationConfiguration {
     private int floorTravelTime;
+    private int threadScheduler;
 }
