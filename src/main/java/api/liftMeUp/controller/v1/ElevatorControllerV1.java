@@ -29,7 +29,7 @@ public class ElevatorControllerV1 extends BaseElevatorController {
     @PostMapping(value = "/url", produces = "application/json") // thsi ligne should  be removed
     public ResponseEntity<String> getElevator(@RequestParam @NonNull String direction, @RequestParam @NonNull Integer floor) { // direction sdhould not be case sensitive
         elevatorService.setDirection(direction, floor);
-        return ResponseEntity.status(HttpStatus.OK).build(); // perhaps making it not waiting? as it hangs forever with "socket hang up" error ==> async reuqest
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 
     @isFireman

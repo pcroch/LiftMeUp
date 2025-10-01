@@ -80,14 +80,8 @@ public class ElevatorServiceImpl {
             if (direction == Direction.UP) {
                 while (!upRequests.isEmpty()) { // using generic to make it array agnostic for fireman queue of user queue
 
-//                    if (!upPriorityRequests.isEmpty() || !downPriorityRequests.isEmpty()) {
-//                        break;
-//                    }
-
                     int nextFloor = upRequests.pollFirst();
                     travelTo(nextFloor);
-
-
                 }
                 direction = Direction.DOWN;
             }
@@ -112,10 +106,6 @@ public class ElevatorServiceImpl {
         int floorsToTravel = Math.abs(destinationFloor - currentFloor);
         for (int i = 0; i < floorsToTravel; i++) {
             Thread.sleep(floorTravelTimeMs); // need top be set up externally or remvoed as startElevator is already doing the job?
-
-//            if (!upPriorityRequests.isEmpty() || !downPriorityRequests.isEmpty()) {
-//                break;
-//            }
 
             if (currentFloor < destinationFloor) {
                 currentFloor++;
