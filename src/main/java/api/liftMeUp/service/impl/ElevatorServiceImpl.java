@@ -1,7 +1,9 @@
 package api.liftMeUp.service.impl;
 
 import api.liftMeUp.commun.constants.Direction;
-import api.liftMeUp.errors.BadRequestException;
+import api.liftMeUp.component.ApplicationConfiguration;
+import lombok.Value;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
@@ -14,7 +16,6 @@ import java.util.concurrent.TimeUnit;
 public class ElevatorServiceImpl {
 
     private int currentFloor;
-    int floorTravelTimeMs = 500; // should be configurable
     private final ScheduledExecutorService elevatorThread = Executors.newSingleThreadScheduledExecutor();
     private Direction direction = Direction.STATIONARY;
     private final TreeSet<Integer> upRequests = new TreeSet<>();
@@ -22,6 +23,13 @@ public class ElevatorServiceImpl {
 
     private final TreeSet<Integer> upPriorityRequests = new TreeSet<>(); // using linkedLIst or Concurent Link List
     private final TreeSet<Integer> downPriorityRequests = new TreeSet<>();
+
+    private final ApplicationConfiguration configuration;
+
+    @Autowired
+    public ElevatorServiceImpl( ApplicationConfiguration configuration){
+        this.configuration = configuration;
+    }
 
     @PostConstruct
     public void startElevator() {
@@ -106,7 +114,7 @@ public class ElevatorServiceImpl {
         System.out.println("Elevator at floor " + currentFloor + ", moving to " + destinationFloor); //todo changing the logging
         int floorsToTravel = Math.abs(destinationFloor - currentFloor);
         for (int i = 0; i < floorsToTravel; i++) {
-            Thread.sleep(floorTravelTimeMs); // need top be set up externally or remvoed as startElevator is already doing the job?
+            Thread.sleep(configuration.getFloorTravelTime());
 
             if (currentFloor < destinationFloor) {
                 currentFloor++;

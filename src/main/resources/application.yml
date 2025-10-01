@@ -3,3 +3,6 @@ spring:
     user:
       name: fireman
       password: fireman
+
+appConfig:
+  floorTravelTime: 1000

@@ -11,11 +11,21 @@
 
     mvn spring-boot:run
 
-# Command
+## Technical specification 
+
+ 1. direction is a enum and I can only be DOWN, UP or STATIONARY 
+ 2. floor is a number between 0 and 50
+
+# Command for a non-authenticated user
 
     curl -X POST http://localhost:8080/api/v1/elevator/call?direction=UP&requesterFloor=50
 
-Where direction can only be DOWN or UP and  the floor is a number between 0 and 50
+# Command for the fireman
+
+user: fireman
+password: fireman
+
+     curl -X POST -u fireman:fireman http://localhost:8080/api/v1/elevator/priority?direction=UP&floor=1
 
 Note that the V1 version is for when only one lift is available
 
