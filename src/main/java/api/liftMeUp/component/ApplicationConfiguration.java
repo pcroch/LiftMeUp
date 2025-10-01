@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 @Component
 @Setter
 @Getter
-@ConfigurationProperties(prefix = "appConfig")
+@ConfigurationProperties(prefix = "app-config")
 public class ApplicationConfiguration {
     private int floorTravelTime;
     private int threadScheduler;

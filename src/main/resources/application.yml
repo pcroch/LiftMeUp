@@ -4,6 +4,6 @@ spring:
       name: fireman
       password: fireman
 
-appConfig:
+app-config:
   floorTravelTime: 1000
   threadScheduler: 1000
